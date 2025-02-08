@@ -1,6 +1,3 @@
-from psycopg2.extras import RealDictCursor
-from typing import List, Dict, Any
-
 import psycopg2
 import datetime
 import dotenv
@@ -46,14 +43,6 @@ class Database:
 
         return value[0][0]
 
-    def insert_criptomoeda(self, nome: str, simbolo: str, descricao: str) -> int:
-        result = self.execute(
-            "INSERT INTO criptomoedas (nome, simbolo, descricao) VALUES (%s, %s, %s) RETURNING id;",
-            (nome, simbolo, descricao),
-        )
-
-        return self.enforce_only(result)
-
     def insert_noticia(
         self,
         id_cripto: int,
@@ -79,7 +68,7 @@ class Database:
 
     def listar_noticias_por_criptomoeda(self, id_cripto: int) -> int:
         query = "SELECT N.id_noticia, N.tema, N.noticia, U.nome AS usuario, S.sentimento, S.score_sentimento FROM Notícias N JOIN Sentimentos_Notícias S ON N.id_noticia = S.id_noticia JOIN Usuarios U ON S.id_usuario = U.id_usuario WHERE N.id_cripto = %s;"
-        result = self.query(query, tuple(id_cripto))
+        result = self.query(query, (id_cripto, ))
 
         noticias = []
         for linha in result:
@@ -106,11 +95,11 @@ class Database:
     def excluir_noticia(self, id_noticia: int):
         # Excluir sentimentos relacionados
         query_sentimentos = "DELETE FROM Sentimentos_Notícias WHERE id_noticia = %s;"
-        self.execute(query_sentimentos, tuple(id_noticia))
+        self.execute(query_sentimentos, (id_noticia, ))
 
         # Excluir notícia
         query_noticia = "DELETE FROM Notícias WHERE id_noticia = %s;"
-        self.execute(query_noticia, tuple(id_noticia))
+        self.execute(query_noticia, (id_noticia, ))
 
     @staticmethod
     def load():
