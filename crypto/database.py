@@ -75,7 +75,9 @@ class Database:
             SET id_cripto = %s, data_publicacao = %s, tema = %s, noticia = %s, fonte = %s
             WHERE id_noticia = %s;
         """
-        self.execute(query, (id_cripto, data_publicacao, tema, noticia, fonte, id_noticia))
+        self.execute(
+            query, (id_cripto, data_publicacao, tema, noticia, fonte, id_noticia)
+        )
 
     def inserir_sentimento(
         self, id_noticia: int, id_usuario: int, sentimento: str, score_sentimento: float
@@ -89,7 +91,7 @@ class Database:
             query, (id_noticia, id_usuario, sentimento, score_sentimento), fetch=True
         )
         return self.enforce_only(result)
-    
+
     def excluir_sentimento(self, id_sentimento: int):
         # Excluir sentimentos relacionados
         query_sentimentos = "DELETE FROM Sentimentos_Notícias WHERE id_sentimento = %s;"
@@ -132,7 +134,11 @@ class Database:
         return noticias
 
     def atualizar_sentimento(
-        self, id_sentimento: int, id_usuario: int, novo_sentimento: str, novo_score: float
+        self,
+        id_sentimento: int,
+        id_usuario: int,
+        novo_sentimento: str,
+        novo_score: float,
     ):
         query = """
             UPDATE Sentimentos_Notícias
@@ -155,21 +161,7 @@ class Database:
         Returns a list of dictionaries with the news details,
         an array of associated sentiments, and the average sentiment score.
         """
-        query = """
-            SELECT
-                N.id_noticia,
-                N.id_cripto,
-                N.data_publicacao,
-                N.tema,
-                N.noticia,
-                N.fonte,
-                array_agg(S.sentimento) as sentimentos,
-                AVG(S.score_sentimento) as score_medio
-            FROM Notícias N
-            LEFT JOIN Sentimentos_Notícias S ON N.id_noticia = S.id_noticia
-            GROUP BY N.id_noticia, N.data_publicacao, N.tema, N.noticia, N.fonte
-            ORDER BY N.data_publicacao DESC;
-        """
+        query = "SELECT * FROM Todas_Notícias ORDER BY data_publicacao DESC;"
         result = self.query(query)
         noticias = []
         for row in result:
@@ -180,7 +172,6 @@ class Database:
                 tema,
                 noticia,
                 fonte,
-                sentimentos,
                 score_medio,
             ) = row
             noticias.append(
@@ -191,7 +182,6 @@ class Database:
                     "tema": tema,
                     "noticia": noticia,
                     "fonte": fonte,
-                    "sentimentos": sentimentos,
                     "score_medio": score_medio,
                 }
             )
