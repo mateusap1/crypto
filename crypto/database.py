@@ -89,6 +89,11 @@ class Database:
             query, (id_noticia, id_usuario, sentimento, score_sentimento), fetch=True
         )
         return self.enforce_only(result)
+    
+    def excluir_sentimento(self, id_noticia: int, id_usuario: int):
+        # Excluir sentimentos relacionados
+        query_sentimentos = "DELETE FROM Sentimentos_Notícias WHERE id_noticia = %s AND id_usuario = %s;"
+        self.execute(query_sentimentos, (id_noticia, id_usuario))
 
     def listar_noticias_por_criptomoeda(self, id_cripto: int) -> List[dict]:
         query = """
@@ -197,7 +202,7 @@ class Database:
         List all sentiment entries (with user information) for a given news item.
         """
         query = """
-            SELECT S.id_sentimento, U.nome AS usuario, S.sentimento, S.score_sentimento
+            SELECT S.id_sentimento, U.id_usuario, U.nome AS usuario, S.sentimento, S.score_sentimento
             FROM Sentimentos_Notícias S
             JOIN Usuarios U ON S.id_usuario = U.id_usuario
             WHERE S.id_noticia = %s;
@@ -205,10 +210,11 @@ class Database:
         result = self.query(query, (id_noticia,))
         sentimentos = []
         for row in result:
-            id_sentimento, usuario, sentimento, score_sentimento = row
+            id_sentimento, id_usuario, usuario, sentimento, score_sentimento = row
             sentimentos.append(
                 {
                     "id_sentimento": id_sentimento,
+                    "id_usuario": id_usuario,
                     "usuario": usuario,
                     "sentimento": sentimento,
                     "score_sentimento": score_sentimento,

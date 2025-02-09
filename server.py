@@ -162,6 +162,17 @@ def update_sentimento(sent_update: SentimentoUpdate):
         db.close()
 
 
+@app.delete("/sentimentos/{id_noticia}/{id_usuario}", summary="Delete a sentimento for a notícia")
+def delete_sentimento(id_noticia: int, id_usuario: int):
+    db = Database.load()
+    try:
+        # Make sure you implement this method in your Database class (crypto.py)
+        db.excluir_sentimento(id_noticia, id_usuario)
+        return {"message": "Sentimento deleted successfully"}
+    finally:
+        db.close()
+
+
 @app.get("/noticias/criptomoeda/{id_cripto}", summary="List notícias for a criptomoeda")
 def list_noticias_por_criptomoeda(id_cripto: int):
     db = Database.load()
