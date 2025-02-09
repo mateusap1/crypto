@@ -46,7 +46,7 @@ class SentimentoIn(BaseModel):
 
 
 class SentimentoUpdate(BaseModel):
-    id_noticia: int
+    id_sentimento: int
     id_usuario: int
     novo_sentimento: str
     novo_score: float
@@ -152,7 +152,7 @@ def update_sentimento(sent_update: SentimentoUpdate):
     db = Database.load()
     try:
         db.atualizar_sentimento(
-            sent_update.id_noticia,
+            sent_update.id_sentimento,
             sent_update.id_usuario,
             sent_update.novo_sentimento,
             sent_update.novo_score,
@@ -162,12 +162,12 @@ def update_sentimento(sent_update: SentimentoUpdate):
         db.close()
 
 
-@app.delete("/sentimentos/{id_noticia}/{id_usuario}", summary="Delete a sentimento for a notícia")
-def delete_sentimento(id_noticia: int, id_usuario: int):
+@app.delete("/sentimentos/{id_noticia}/{id_sentimento}", summary="Delete a sentimento for a notícia")
+def delete_sentimento(id_noticia: int, id_sentimento: int):
     db = Database.load()
     try:
         # Make sure you implement this method in your Database class (crypto.py)
-        db.excluir_sentimento(id_noticia, id_usuario)
+        db.excluir_sentimento(id_sentimento)
         return {"message": "Sentimento deleted successfully"}
     finally:
         db.close()

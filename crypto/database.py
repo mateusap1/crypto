@@ -90,10 +90,10 @@ class Database:
         )
         return self.enforce_only(result)
     
-    def excluir_sentimento(self, id_noticia: int, id_usuario: int):
+    def excluir_sentimento(self, id_sentimento: int):
         # Excluir sentimentos relacionados
-        query_sentimentos = "DELETE FROM Sentimentos_Notícias WHERE id_noticia = %s AND id_usuario = %s;"
-        self.execute(query_sentimentos, (id_noticia, id_usuario))
+        query_sentimentos = "DELETE FROM Sentimentos_Notícias WHERE id_sentimento = %s;"
+        self.execute(query_sentimentos, (id_sentimento,))
 
     def listar_noticias_por_criptomoeda(self, id_cripto: int) -> List[dict]:
         query = """
@@ -132,14 +132,14 @@ class Database:
         return noticias
 
     def atualizar_sentimento(
-        self, id_noticia: int, id_usuario: int, novo_sentimento: str, novo_score: float
+        self, id_sentimento: int, id_usuario: int, novo_sentimento: str, novo_score: float
     ):
         query = """
             UPDATE Sentimentos_Notícias
-            SET sentimento = %s, score_sentimento = %s
-            WHERE id_noticia = %s AND id_usuario = %s;
+            SET id_usuario = %s, sentimento = %s, score_sentimento = %s
+            WHERE id_sentimento = %s;
         """
-        self.execute(query, (novo_sentimento, novo_score, id_noticia, id_usuario))
+        self.execute(query, (id_usuario, novo_sentimento, novo_score, id_sentimento))
 
     def excluir_noticia(self, id_noticia: int):
         # Excluir sentimentos relacionados
