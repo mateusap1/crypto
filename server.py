@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from datetime import datetime, date
@@ -417,12 +417,25 @@ async def upload_imagem(
         db.close()
 
 
-@app.get("/imagens/criptomoedas/{id_cripto}", summary="List images for a criptomoeda")
-def list_imagens_criptomoedas(id_cripto: int):
+# @app.get("/imagens/criptomoedas/{id_cripto}", summary="List images for a criptomoeda")
+# def list_imagens_criptomoedas(id_cripto: int):
+#     db = Database.load()
+#     try:
+#         imagens = db.listar_imagens_criptomoedas(id_cripto)
+#         return imagens
+#     finally:
+#         db.close()
+
+
+@app.get("/imagens/criptomoedas/{id_cripto}", summary="A imagem da criptomoeda")
+def read_criptomoeda_image(id_cripto: int):
     db = Database.load()
     try:
-        imagens = db.listar_imagens_criptomoedas(id_cripto)
-        return imagens
+        crypto = db.read_logo_criptomoeda(id_cripto)
+        if crypto is None:
+            raise HTTPException(status_code=404, detail="Criptomoeda não existe.")
+        
+        return {"image": crypto}
     finally:
         db.close()
 

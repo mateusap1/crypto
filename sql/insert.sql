@@ -1,11 +1,11 @@
 -- Criptomoedas
-INSERT INTO Criptomoedas (nome, simbolo, descricao, mercado)
+INSERT INTO Criptomoedas (id_cripto, nome, simbolo, descricao, mercado)
 VALUES 
-('Bitcoin', 'BTC', 'Primeira criptomoeda descentralizada', 'Binance'),
-('Ethereum', 'ETH', 'Plataforma de contratos inteligentes', 'Coinbase'),
-('Cardano', 'ADA', 'Criptomoeda de terceira geração focada em escalabilidade', 'Kraken'),
-('Solana', 'SOL', 'Plataforma blockchain para aplicativos descentralizados', 'Binance'),
-('Ripple', 'XRP', 'Criptomoeda para pagamentos digitais', 'Bitstamp');
+(1, 'Bitcoin', 'BTC', 'Primeira criptomoeda descentralizada', 'Binance'),
+(2, 'Ethereum', 'ETH', 'Plataforma de contratos inteligentes', 'Coinbase'),
+(3, 'Cardano', 'ADA', 'Criptomoeda de terceira geração focada em escalabilidade', 'Kraken'),
+(4, 'Solana', 'SOL', 'Plataforma blockchain para aplicativos descentralizados', 'Binance'),
+(5, 'Ripple', 'XRP', 'Criptomoeda para pagamentos digitais', 'Bitstamp');
 
 -- Cotações
 INSERT INTO Cotações (id_cripto, data_hora, preco, volume, market_cap, variacao)

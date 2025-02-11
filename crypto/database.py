@@ -484,6 +484,14 @@ class Database:
             )
         return imagens
 
+    def read_logo_criptomoeda(self, id_cripto: int) -> str:
+        query = "SELECT encode(conteudo, 'base64') AS image_base64 FROM Imagens_Criptomoedas WHERE id_cripto=%s AND tipo='logo';"
+        result = self.query(query, (id_cripto,))
+        if len(result) == 1:
+            return result[0][0]
+        else:
+            return None
+
     # --- CRUD for Usuários ---
 
     def inserir_usuario(
