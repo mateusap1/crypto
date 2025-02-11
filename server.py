@@ -6,11 +6,7 @@ from crypto import Database  # Assumes the updated Database class is in crypto.p
 
 app = FastAPI(title="Crypto Wallet/Watcher API")
 
-origins = [
-    "http://localhost",
-    "http://localhost:8000",
-    "http://localhost:3000",
-]
+origins = ["http://localhost", "http://localhost:8000", "http://localhost:3000"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -162,7 +158,10 @@ def update_sentimento(sent_update: SentimentoUpdate):
         db.close()
 
 
-@app.delete("/sentimentos/{id_noticia}/{id_sentimento}", summary="Delete a sentimento for a notícia")
+@app.delete(
+    "/sentimentos/{id_noticia}/{id_sentimento}",
+    summary="Delete a sentimento for a notícia",
+)
 def delete_sentimento(id_noticia: int, id_sentimento: int):
     db = Database.load()
     try:
@@ -434,7 +433,7 @@ def read_criptomoeda_image(id_cripto: int):
         crypto = db.read_logo_criptomoeda(id_cripto)
         if crypto is None:
             raise HTTPException(status_code=404, detail="Criptomoeda não existe.")
-        
+
         return {"image": crypto}
     finally:
         db.close()
